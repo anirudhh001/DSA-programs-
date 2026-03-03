@@ -1,0 +1,42 @@
+#include <stdio.h>
+#include <string.h>
+#include <ctype.h>
+#define MAX_STACK 100
+#define MAX_LEN 300  
+char stack[MAX_STACK][MAX_LEN];
+int top = -1;
+void push(const char *str) {
+    top++;
+    strcpy(stack[top], str);
+}
+char* pop() {
+    return stack[top--];
+}
+int main() {
+    char input[MAX_LEN];
+    fgets(input, sizeof(input), stdin);
+    char *token = strtok(input, " \n");
+    while (token != NULL) {
+        if (isalnum(token[0])) {
+            push(token);
+        } 
+        else {
+            char right[MAX_LEN], left[MAX_LEN], temp[MAX_LEN];
+
+            strcpy(right, pop());
+            strcpy(left, pop());
+            temp[0] = '(';
+            temp[1] = '\0';
+            strcat(temp, left);
+            int len = strlen(temp);
+            temp[len] = token[0];
+            temp[len + 1] = '\0';
+            strcat(temp, right);
+            strcat(temp, ")");
+            push(temp);
+        }
+        token = strtok(NULL, " \n");
+    }
+    printf("%s\n", pop());
+    return 0;
+}
