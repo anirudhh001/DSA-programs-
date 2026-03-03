@@ -1,0 +1,42 @@
+#include <stdio.h>
+#include <string.h>
+#include <ctype.h>
+#define MAX 300
+char stack[100][MAX];
+int top = -1;
+void push(const char *str) {
+    top++;
+    strcpy(stack[top], str);
+}
+char* pop() {
+    return stack[top--];
+}
+int main() {
+    char prefix[105];
+    scanf("%s", prefix);
+    int len = strlen(prefix);
+    for (int i = len - 1; i >= 0; i--) {
+        if (isalnum(prefix[i])) {
+            char operand[2];
+            operand[0] = prefix[i];
+            operand[1] = '\0';
+            push(operand);
+        }
+        else {
+            char left[MAX], right[MAX], temp[MAX];
+            strcpy(left, pop());
+            strcpy(right, pop());
+            temp[0] = '(';
+            temp[1] = '\0';
+            strcat(temp, left);
+            int l = strlen(temp);
+            temp[l] = prefix[i];
+            temp[l + 1] = '\0';
+            strcat(temp, right);
+            strcat(temp, ")");
+            push(temp);
+        }
+    }
+    printf("%s\n", pop());
+    return 0;
+}
